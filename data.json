@@ -1,0 +1,30 @@
+{
+  "current_balance": 0.0,
+  "total_earned_lifetime": 0.0,
+  "last_activity_id": "",
+  "weight_history": [],
+  "redeemed_count": 0,
+  "collectibles_list": [
+    {
+      "id": 1,
+      "name": "Coffee Mug",
+      "cost": 25.0,
+      "status": "locked"
+    },
+    {
+      "id": 2,
+      "name": "Desk Plant",
+      "cost": 50.0,
+      "status": "locked"
+    },
+    {
+      "id": 3,
+      "name": "Massage Gift Card",
+      "cost": 100.0,
+      "status": "locked"
+    }
+  ],
+  "budget_a_spend": 0.0,
+  "budget_b_unlocked": false,
+  "max_allowed_redeems": 0
+}

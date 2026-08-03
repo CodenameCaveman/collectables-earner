@@ -1,0 +1,44 @@
+Act as an expert software engineer. I need a complete, production-ready Python architecture to deploy a free, automated fitness incentive tracking system running entirely on GitHub Actions, GitHub Pages, and Twilio's free tier. 
+
+The software must handle four specific areas: a background listener for Strava/Hevy, an API endpoint to receive weight data via Apple Health Webhooks/Shortcuts, a local JSON database, an HTML dashboard generator, and an automated SMS notification system.
+
+Please generate the full, self-contained Python script ('app.py'), the HTML template ('index.html'), and the step-by-step GitHub repository deployment workflow guide based on the exact logic below:
+
+1. CORE DATABASE STRUCTURE (data.json)
+Track the following schema locally within the repository:
+- current_balance: float (Total cash available to spend)
+- total_earned_lifetime: float
+- last_activity_id: string (To prevent duplicate processing)
+- weight_history: list of dicts [{"date": "YYYY-MM-DD", "weight": float}]
+- redeemed_count: int (Number of milestone gifts successfully purchased)
+- collectibles_list: list of dicts [{"id": int, "name": string, "cost": float, "status": "locked/affordable/redeemed"}]
+
+2. AUTOMATED WITHINGS SCALE / APPLE HEALTH WEIGHT LOGIC
+- On the user's iPhone 15 Pro, their Withings scale syncs daily weight directly to Apple Health.
+- The Python script must expose a lightweight JSON payload parser (triggered via a GitHub Repository Dispatch API token or a free web hook) to receive new weight logs automatically.
+- Format expected from the phone: {"date": "YYYY-MM-DD", "weight": float}
+- When a new weight is posted, add it to 'weight_history'. 
+- Calculate the 7-day rolling average: sum(last 7 weights) / 7.
+- Milestones are locked behind static gates: 220, 215, 210, 205, 200, 195, 190, 185, 180, 175, 170 lbs.
+- Gate Check Rule: The user can only redeem an affordable collectible IF their current 7-day rolling average is LESS THAN OR EQUAL TO their next target milestone.
+- Redemption Multiplier: Each time a weight gate is crossed via the 7-day rolling average, increment 'max_allowed_redeems' by 1. Each subsequent redemption allows the purchase of exactly 1 item from the affordable list, decrementing the available redemption counter.
+
+3. THE TWO BIWEEKLY BUDGET RULES
+Every 14 days, the system resets its max earning limits:
+- Budget A (Collectible Fund): Maximum $200 limit per 2 weeks. 
+  * Biking Activity: $0.81 per mile.
+  * Walking Activity: $2.43 per mile.
+  * Strength Workout (via Hevy manual sync): $5.00 flat per completed workout.
+- Budget B (Biking Meal Fund Allowance): Maximum $50 limit per 2 weeks.
+  * Rule: This is a binary permission flag. If a Strava Biking activity starts/ends near a food venue or is marked as a commute to food, flag the $50 as "UNLOCKED FOR USE". It does not add to current_balance.
+
+4. AUTOMATED SMS OUTBOUND TEXTS (Twilio Integration)
+After every GitHub Action run triggered by a new fitness activity or weight sync, send one of these exact automated text alerts via Twilio:
+- Standard Activity Earned: "Congrats! $X.XX has been put toward your total. Click here for more info: [GitHub Pages URL]"
+- Milestone Achievement Unlock: "You have reached your threshold, you can redeem up to 1 gift! Click here to choose your collectible: [GitHub Pages URL]"
+- Daily Morning Workout Prompt (scheduled cron job): Check the day of the week. If Monday, Wednesday, Friday, or Sunday, text: "Today is Day A: Power & Posture (Squats/Glute Bridges/Planks)". If Tuesday, Thursday, or Saturday, text: "Today is Day B: Balance & Armor (Lunges/Calf Raises/Lateral Raises)".
+
+5. DEPLOYMENT ARCHITECTURE REQUIREMENT
+- Provide a Python script utilizing 'urllib' or 'requests' to hit the Strava Webhook/API and receive the iPhone data payload.
+- Include the automation file '.github/workflows/tracker.yml' utilizing actions/checkout and actions/upload-pages to rebuild the static site whenever data updates.
+- Ensure the index.html template presents a highly scannable, mobile-responsive layout showing: Current Balance, 7-Day Weight Average, Next Weight Gate Target, a checklist of Collectibles (color-coded by affordable vs. locked), and the remaining Biking Meal Fund status.
