@@ -2,7 +2,40 @@
   "current_balance": 0.0,
   "total_earned_lifetime": 0.0,
   "last_activity_id": "",
-  "weight_history": [],
+  "weight_history": [
+    {
+      "date": "2026-07-25",
+      "weight": 220.0
+    },
+    {
+      "date": "2026-07-26",
+      "weight": 218.0
+    },
+    {
+      "date": "2026-07-27",
+      "weight": 215.0
+    },
+    {
+      "date": "2026-07-28",
+      "weight": 213.0
+    },
+    {
+      "date": "2026-07-29",
+      "weight": 210.0
+    },
+    {
+      "date": "2026-07-30",
+      "weight": 208.0
+    },
+    {
+      "date": "2026-07-31",
+      "weight": 206.0
+    },
+    {
+      "date": "2026-08-01",
+      "weight": 204.0
+    }
+  ],
   "redeemed_count": 0,
   "collectibles_list": [
     {
@@ -10,21 +43,9 @@
       "name": "Coffee Mug",
       "cost": 25.0,
       "status": "locked"
-    },
-    {
-      "id": 2,
-      "name": "Desk Plant",
-      "cost": 50.0,
-      "status": "locked"
-    },
-    {
-      "id": 3,
-      "name": "Massage Gift Card",
-      "cost": 100.0,
-      "status": "locked"
     }
   ],
   "budget_a_spend": 0.0,
   "budget_b_unlocked": false,
-  "max_allowed_redeems": 0
+  "max_allowed_redeems": 1
 }

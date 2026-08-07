@@ -20,7 +20,8 @@ This repository contains a self-contained fitness incentive tracker that uses Gi
    - `TELEGRAM_CHAT_ID`
    - `SITE_URL` (your GitHub Pages URL)
 3. Enable GitHub Pages with the GitHub Actions deployment source.
-4. Trigger the workflow manually or via repository dispatch.
+4. Trigger `.github/workflows/tracker.yml` on `main` (manual trigger, push, schedule, or repository dispatch).
+5. The workflow runs `python app.py render`, stages only the generated `index.html` (and optional `CNAME`) into a `site/` artifact directory, and deploys that artifact with `actions/deploy-pages`.
 
 ## Webhook idea
 You can call the tracked webhook URL from a Shortcut, Apple Health export, or a simple GitHub repository dispatch action with a JSON body.
