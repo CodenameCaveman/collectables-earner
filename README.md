@@ -1,6 +1,6 @@
 # Collectables Earner
 
-This repository contains a self-contained fitness incentive tracker that uses GitHub Actions, GitHub Pages, and Twilio to run a free automation loop.
+This repository contains a self-contained fitness incentive tracker that uses GitHub Actions, GitHub Pages, and Telegram to run a free automation loop.
 
 ## Files
 - app.py: the Python entry point for storing activity and weight data, generating the dashboard, and exposing a lightweight webhook endpoint.
@@ -16,10 +16,8 @@ This repository contains a self-contained fitness incentive tracker that uses Gi
 ## GitHub Actions deployment
 1. Push this repository to GitHub.
 2. In repository Settings → Secrets and variables → Actions, add:
-   - `TWILIO_ACCOUNT_SID`
-   - `TWILIO_AUTH_TOKEN`
-   - `TWILIO_FROM_NUMBER`
-   - `TWILIO_TO_NUMBER`
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_CHAT_ID`
    - `SITE_URL` (your GitHub Pages URL)
 3. Enable GitHub Pages with the GitHub Actions deployment source.
 4. Trigger the workflow manually or via repository dispatch.

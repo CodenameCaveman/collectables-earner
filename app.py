@@ -116,6 +116,9 @@ def handle_weight_data(payload: Dict[str, Any], send_sms: bool = False) -> Dict[
         send_sms_message(
             f"You have reached your threshold, you can redeem up to 1 gift! Click here to choose your collectible: {os.getenv('SITE_URL', 'https://example.com')}"
         )
+        send_telegram_message(
+            f"You have reached your threshold, you can redeem up to 1 gift! Visit {os.getenv('SITE_URL', 'https://example.com')}"
+        )
 
     return {
         "rolling_average": average,
@@ -162,6 +165,9 @@ def handle_activity_data(activity: Dict[str, Any], send_sms: bool = False) -> Di
         send_sms_message(
             f"Congrats! ${earnings:.2f} has been put toward your total. Click here for more info: {os.getenv('SITE_URL', 'https://example.com')}"
         )
+        send_telegram_message(
+            f"Congrats! ${earnings:.2f} has been put toward your total. Visit {os.getenv('SITE_URL', 'https://example.com')}"
+        )
 
     return {
         "earnings": earnings,
@@ -204,6 +210,32 @@ def get_daily_prompt_message() -> str:
     if today in {"Monday", "Wednesday", "Friday", "Sunday"}:
         return "Today is Day A: Power & Posture (Squats/Glute Bridges/Planks)"
     return "Today is Day B: Balance & Armor (Lunges/Calf Raises/Lateral Raises)"
+
+
+def build_telegram_payload(message: str, chat_id: str) -> Dict[str, Any]:
+    return {
+        "chat_id": chat_id,
+        "text": message,
+        "parse_mode": "HTML",
+    }
+
+
+def send_telegram_message(message: str) -> None:
+    bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    if not bot_token or not chat_id:
+        print(f"Telegram skipped; message: {message}")
+        return
+
+    payload = json.dumps(build_telegram_payload(message, chat_id)).encode("utf-8")
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    req = urllib.request.Request(url, data=payload, method="POST")
+    req.add_header("Content-Type", "application/json")
+    try:
+        with urllib.request.urlopen(req, timeout=10) as response:
+            response.read()
+    except Exception as exc:  # pragma: no cover
+        print(f"Telegram failed: {exc}")
 
 
 def build_dashboard_html() -> str:

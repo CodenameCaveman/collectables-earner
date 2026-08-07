@@ -67,6 +67,12 @@ class TrackerAppTests(unittest.TestCase):
         self.assertEqual(result["budget_a_remaining"], 195.95)
         self.assertEqual(result["budget_b_unlocked"], True)
 
+    def test_build_telegram_payload(self):
+        payload = app.build_telegram_payload("hello", "123456")
+        self.assertEqual(payload["chat_id"], "123456")
+        self.assertEqual(payload["text"], "hello")
+        self.assertEqual(payload["parse_mode"], "HTML")
+
 
 if __name__ == "__main__":
     unittest.main()
